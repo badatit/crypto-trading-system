@@ -14,6 +14,8 @@ public class AggregatePriceMapper {
         aggregatedPriceDTO.setSymbol(binancePriceDTO.getSymbol());
         aggregatedPriceDTO.setAsk(binancePriceDTO.getAskPrice());
         aggregatedPriceDTO.setBid(binancePriceDTO.getBidPrice());
+        aggregatedPriceDTO.setBidQty(binancePriceDTO.getBidQty());
+        aggregatedPriceDTO.setAskQty(binancePriceDTO.getAskQty());
         return aggregatedPriceDTO;
     }
 
@@ -23,6 +25,9 @@ public class AggregatePriceMapper {
         aggregatedPriceDTO.setSymbol(huobiPriceData.getSymbol());
         aggregatedPriceDTO.setAsk(huobiPriceData.getAsk());
         aggregatedPriceDTO.setBid(huobiPriceData.getBid());
+        aggregatedPriceDTO.setBidQty(huobiPriceData.getBidSize());
+        aggregatedPriceDTO.setAskQty(huobiPriceData.getAskSize());
         return aggregatedPriceDTO;
     }
+
 }

@@ -2,7 +2,7 @@ package com.example.trading.scheduler;
 
 import com.example.trading.enums.CryptoEnums;
 import com.example.trading.model.dto.AggregatedPriceDTO;
-import com.example.trading.model.entity.CryptoPriceEntity;
+import com.example.trading.model.entity.CryptoPrice;
 import com.example.trading.repository.CryptoPriceRepository;
 import com.example.trading.scheduler.provider.FetchDataStrategy;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +35,14 @@ public class CryptoPriceScheduler {
     }
 
     private void saveRecord(String symbol, AggregatedPriceDTO bestBid, AggregatedPriceDTO bestAsk) {
-        CryptoPriceEntity record = new CryptoPriceEntity();
+        CryptoPrice record = new CryptoPrice();
         record.setSymbol(symbol);
         record.setBestBid(bestBid.getBid());
         record.setBestAsk(bestAsk.getAsk());
         record.setSourceBid(bestBid.getSource());
         record.setSourceAsk(bestAsk.getSource());
+        record.setBestAskQty(bestAsk.getAskQty());
+        record.setBestBidQty(bestBid.getBidQty());
         cryptoPriceRepository.save(record);
     }
 

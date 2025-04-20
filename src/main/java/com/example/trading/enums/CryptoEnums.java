@@ -17,11 +17,6 @@ public enum CryptoEnums {
         this.value = value;
     }
 
-    public static boolean hasCode(String input) {
-        return Arrays.stream(CryptoEnums.values())
-                .anyMatch(s -> s.name().equalsIgnoreCase(input));
-    }
-
     public static List<String> getKeys() {
         List<String> keys = new ArrayList<>();
         for (CryptoEnums pair : CryptoEnums.values()) {

@@ -14,6 +14,8 @@ public class AggregatedPriceDTO {
     private String symbol;
     private double bid;
     private double ask;
+    private double bidQty;
+    private double askQty;
 
     public AggregatedPriceDTO() {}
 }

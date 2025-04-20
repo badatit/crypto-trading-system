@@ -2,37 +2,33 @@ package com.example.trading.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "crypto_price")
+@Table(name = "trade_transaction")
 @Getter
 @Setter
-@ToString
-public class CryptoPriceEntity {
-
+public class TradeTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
+
     private String symbol;
 
-    @Column(name = "best_bid")
-    private double bestBid;
+    @Column(name = "order_type")
+    private String orderType;
 
-    @Column(name = "best_ask")
-    private double bestAsk;
+    private double price;
 
-    @Column(name = "source_bid")
-    private String sourceBid;
+    private double amount;
 
-    @Column(name = "source_ask")
-    private String sourceAsk;
+    private String status;
 
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @PrePersist

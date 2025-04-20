@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class TradingHistoryResponse {
-    private Long id;
     private Long userId;
     private String symbol;
     private String orderType;

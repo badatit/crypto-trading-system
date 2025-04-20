@@ -4,6 +4,6 @@ import com.example.trading.model.response.CryptoBestAggregatePriceResponse;
 
 import java.util.List;
 
-public interface CryptoPriceService {
+public interface CryptoAggregationPriceService {
     List<CryptoBestAggregatePriceResponse> findLatestBestAggregatedPrices();
 }

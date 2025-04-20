@@ -2,10 +2,10 @@ package com.example.trading.controller;
 
 import com.example.trading.model.request.TradeRequest;
 import com.example.trading.model.response.CryptoBestAggregatePriceResponse;
-import com.example.trading.model.response.TradeResponse;
+import com.example.trading.model.response.TradeOrderResponse;
 import com.example.trading.model.response.TradingHistoryResponse;
 import com.example.trading.model.response.UserWalletResponse;
-import com.example.trading.service.CryptoPriceService;
+import com.example.trading.service.CryptoAggregationPriceService;
 import com.example.trading.service.TradingService;
 import com.example.trading.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.List;
 public class CryptoPriceController {
 
     @Autowired
-    private CryptoPriceService cryptoPriceService;
+    private CryptoAggregationPriceService cryptoAggregationPriceService;
 
     @Autowired
     private TradingService tradingService;
@@ -29,11 +29,11 @@ public class CryptoPriceController {
 
     @GetMapping("/prices/best")
     public ResponseEntity<List<CryptoBestAggregatePriceResponse>> getLatestBestAggregatedPrices() {
-        return ResponseEntity.ok(cryptoPriceService.findLatestBestAggregatedPrices());
+        return ResponseEntity.ok(cryptoAggregationPriceService.findLatestBestAggregatedPrices());
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<TradeResponse> getTradingOrder(@RequestBody TradeRequest request) {
+    public ResponseEntity<TradeOrderResponse> getTradingOrder(@RequestBody TradeRequest request) {
         return ResponseEntity.ok(tradingService.handleTradeCryptoOrder(request));
     }
 

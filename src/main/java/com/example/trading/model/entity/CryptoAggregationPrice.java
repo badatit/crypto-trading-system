@@ -8,11 +8,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "crypto_price")
+@Table(name = "crypto_aggregation_price")
 @Getter
 @Setter
 @ToString
-public class CryptoPrice {
+public class CryptoAggregationPrice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

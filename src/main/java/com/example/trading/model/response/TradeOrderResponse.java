@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class TradeResponse {
+public class TradeOrderResponse {
     private String status;
     private String message;
     private Long transactionId;

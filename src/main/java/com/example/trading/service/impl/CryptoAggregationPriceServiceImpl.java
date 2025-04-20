@@ -1,10 +1,10 @@
 package com.example.trading.service.impl;
 
 import com.example.trading.enums.CryptoEnums;
-import com.example.trading.model.entity.CryptoPrice;
+import com.example.trading.model.entity.CryptoAggregationPrice;
 import com.example.trading.model.response.CryptoBestAggregatePriceResponse;
 import com.example.trading.repository.CryptoPriceRepository;
-import com.example.trading.service.CryptoPriceService;
+import com.example.trading.service.CryptoAggregationPriceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class CryptoPriceServiceImpl implements CryptoPriceService {
+public class CryptoAggregationPriceServiceImpl implements CryptoAggregationPriceService {
 
     @Autowired
     private CryptoPriceRepository cryptoPriceRepository;
@@ -26,7 +26,7 @@ public class CryptoPriceServiceImpl implements CryptoPriceService {
     public List<CryptoBestAggregatePriceResponse> findLatestBestAggregatedPrices() {
         log.info("CryptoPriceServiceImpl ==> findLatestBestAggregatedPrices");
         Pageable pageable = PageRequest.of(0, 2);
-        List<CryptoPrice> priceEntities = cryptoPriceRepository.findLatestPrices(CryptoEnums.getKeys(), pageable);
+        List<CryptoAggregationPrice> priceEntities = cryptoPriceRepository.findLatestPrices(CryptoEnums.getKeys(), pageable);
         return priceEntities.stream()
                 .map(i -> {
                     CryptoBestAggregatePriceResponse response = new CryptoBestAggregatePriceResponse();

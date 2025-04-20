@@ -2,11 +2,11 @@ package com.example.trading.service.impl;
 
 import com.example.trading.exception.InvalidInputException;
 import com.example.trading.exception.NotFoundException;
-import com.example.trading.model.entity.CryptoPrice;
+import com.example.trading.model.entity.CryptoAggregationPrice;
 import com.example.trading.model.entity.TradeTransaction;
 import com.example.trading.model.entity.UserWallet;
 import com.example.trading.model.request.TradeRequest;
-import com.example.trading.model.response.TradeResponse;
+import com.example.trading.model.response.TradeOrderResponse;
 import com.example.trading.model.response.TradingHistoryResponse;
 import com.example.trading.repository.CryptoPriceRepository;
 import com.example.trading.repository.TradeTransactionRepository;
@@ -37,13 +37,13 @@ public class TradingServiceImpl implements TradingService {
 
     @Override
     @Transactional
-    public TradeResponse handleTradeCryptoOrder(TradeRequest request) {
+    public TradeOrderResponse handleTradeCryptoOrder(TradeRequest request) {
         String symbol = request.getSymbol().toUpperCase();
         String orderType = request.getOrderType().toUpperCase();
         Double amount = request.getAmount();
         double matchedPrice = 0.0;
         try {
-            CryptoPrice price = cryptoPriceRepository.findTopBySymbolOrderByCreatedAtDesc(symbol)
+            CryptoAggregationPrice price = cryptoPriceRepository.findTopBySymbolOrderByCreatedAtDesc(symbol)
                     .orElseThrow(() -> new NotFoundException("Price not available"));
 
             UserWallet wallet = userWalletRepository.findById(request.getUserId())
@@ -51,12 +51,15 @@ public class TradingServiceImpl implements TradingService {
 
             switch (orderType) {
                 case "BUY":
+                    log.info("Processing BUY order: symbol={}, amount={}", symbol, amount);
                     matchedPrice = this.handleBuy(amount, price, wallet, symbol);
                     break;
                 case "SELL":
+                    log.info("Processing SELL order: symbol={}, amount={}", symbol, amount);
                     matchedPrice = this.handleSell(amount, price, symbol, wallet);
                     break;
                 default:
+                    log.error("Unknown order type: {}", orderType);
                     throw new RuntimeException("Invalid order type: " + orderType);
             }
             userWalletRepository.save(wallet);
@@ -64,6 +67,11 @@ public class TradingServiceImpl implements TradingService {
             log.error("Error with handleTradeCryptoOrder- {} ", e.getMessage());
         }
 
+        TradeTransaction trade = this.saveTradeTransaction(request, orderType, symbol, amount, matchedPrice);
+        return new TradeOrderResponse("Success", "Trade ", trade.getId());
+    }
+
+    private TradeTransaction saveTradeTransaction(TradeRequest request, String orderType, String symbol, Double amount, double matchedPrice) {
         TradeTransaction trade = new TradeTransaction();
         trade.setUserId(request.getUserId());
         trade.setOrderType(orderType);
@@ -72,10 +80,10 @@ public class TradingServiceImpl implements TradingService {
         trade.setPrice(matchedPrice);
         trade.setStatus("Success");
         tradeTransactionRepository.save(trade);
-        return new TradeResponse("Success", "Trade ", trade.getId());
+        return trade;
     }
 
-    private double handleSell(Double amount, CryptoPrice price, String symbol, UserWallet wallet) {
+    private double handleSell(Double amount, CryptoAggregationPrice price, String symbol, UserWallet wallet) {
         if (amount > price.getBestBidQty()) {
             throw new InvalidInputException("Not enough market liquidity to SELL");
         }
@@ -98,7 +106,7 @@ public class TradingServiceImpl implements TradingService {
         return matchedPrice;
     }
 
-    private double handleBuy(Double amount, CryptoPrice price, UserWallet wallet, String symbol) {
+    private double handleBuy(Double amount, CryptoAggregationPrice price, UserWallet wallet, String symbol) {
         if (amount > price.getBestAskQty()) {
             throw new InvalidInputException("Not enough market liquidity to BUY");
         }
